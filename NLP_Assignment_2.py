@@ -26,7 +26,7 @@ class IMDbData:
       
     TODO: Complete this function 
     """
-    return 
+    return len(self.paths)
 
   def __getitem__(self, idx):
     """
@@ -46,7 +46,22 @@ class IMDbData:
     TODO: Complete this function using self.paths, self.tokenizer, and read_txt()
     """
 
-    return 
+    path = self.paths[idx]
+    text = read_txt(str(path))
+    tokens = self.tokenizer(text)
+    label = 1 if "pos" in str(path) else 0
+
+    return tokens, label
+
+trainset = IMDbData(train_pths)
+validset = IMDbData(valid_pths)
+short_validset = IMDbData(valid_pths[:100])
+testset = IMDbData(test_pths)
+
+print('__len__ result for trainset: ', len(trainset))
+print('__getitem__ result: ', trainset[1])
+
+
 
 class Str2Idx2Str:
   def __init__(self, vocab):
@@ -63,8 +78,8 @@ class Str2Idx2Str:
     - e.g. self.str2idx[your_word] returns an integer value of the index of your_word in the vocabulary
 
     '''
-    self.idx2str = []
-    self.str2idx = {}
+    self.idx2str = vocab[:]
+    self.str2idx = {word: idx for idx, word in enumerate(self.idx2str)}
     
     
     '''
@@ -73,6 +88,7 @@ class Str2Idx2Str:
     '''
     self.unknown_idx = len(self.str2idx)
     self.idx2str.append("UNKNOWN")
+    self.unknown_idx = 0
   
     
   
